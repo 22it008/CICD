@@ -1,0 +1,50 @@
+name: CI-CD Pipeline for MERN App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install backend dependencies
+      run: |
+        cd backend  # Navigate to the server directory
+        npm install
+
+    - name: Install frontend dependencies
+      run: |
+        cd frontend  # Navigate to the client directory
+        npm install
+
+    - name: Run backend tests
+      run: |
+        cd backend  # Navigate to the server directory
+        npm test
+
+    - name: Run frontend tests
+      run: |
+        cd frontend  # Navigate to the client directory
+        npm test
+
+    - name: Build frontend
+      run: |
+        cd frontend  # Navigate to the client directory
+        npm run build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3  # Updated to version 3
+      with:
+        name: build
+        path: ./client/build  # Ensure this points to the correct build path
